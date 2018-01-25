@@ -1,0 +1,60 @@
+<div class="animated fadeIn">
+  <div class="card">
+    <div class="card-header">
+     点列表
+    </div>
+
+    <div class="card-block">
+      <!--添加搜索按钮-->
+      <div class="row">
+        <div class="input-group" >
+          <input class="form-control col-md-6 col-sm-4 " id="input-group" name="input2-group2" [(ngModel)]="keyword"    placeholder="请输入点名称" type="text">
+          <span class="input-group-btn  ">
+                    <button class="btn btn-primary  " type="button" (click)="list()">搜索</button>
+        </span>
+        </div>
+      </div>
+
+      <br>
+      <!--搜索按钮事件完成-->
+      <table class="table table-bordered table-striped table-sm" *ngIf="listDataLoaded">
+        <thead>
+        <tr>
+          <th>点名称</th>
+          <th>1-6轴</th>
+          <th>x,y,z,a,b,g</th>
+          <th>创建日期</th>
+          <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr  *ngFor="let item of listData.pageItems; index as i;">
+          <td>{{item.name}}</td>
+          <td>{{item.angleJson}}</td>
+          <td>{{item.posCoordJson}} </td>
+          <td>{{item.dateCreated | date: 'yyyy-MM-dd' }}</td>
+          <td>
+                <span class="input-group-btn">
+                  <button class="btn btn-primary " type="button"  (click)="moveToPoint(item.id)">运行至点</button>
+                   <button class="btn btn-default " type="button"  (click)="delete(item.id,item.name)">删除</button>
+                </span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <!--引入分页模板-->
+      <div class="col-md-6">
+        <pagination [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize" class="pagination-sm"
+                    [lastText]="'末页'"
+                    [nextText]="'下一页'"
+                    [previousText]="'上一页'"
+                    [firstText]="'首页'"
+                    [boundaryLinks]="true"
+                    [itemsPerPage]="max"
+                    (pageChanged)="pageChanged($event)"
+        ></pagination>
+      </div>
+      <!--分页完成-->
+     </div>
+  </div>
+</div>

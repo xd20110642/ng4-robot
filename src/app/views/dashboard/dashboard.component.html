@@ -1,0 +1,274 @@
+<div class="animated fadeIn">
+  <div class="card text-white bg-primary text-center">
+    <div class="card-body">
+      <div class="form-group col-md-6  col-xs-12 ">
+        <div class="input-group">
+          <span class="input-group-addon">服务器管理地址</span>
+          <input class="form-control" id="serverAddress" name="serverAddress" [(ngModel)]="serverAddress" type="text">
+          <button class="btn btn-warning" type="button" (click)="changeServerAddress()">更改</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-outline-info">
+    <div class="card-header">
+      基础命令
+    </div>
+    <div class="card-block">
+      <div class="row" >
+        <div class="col-md-3  col-sm-6 col-xs-6">
+          <input type="text" class="form-control"  [(ngModel)]="ipAddress" name="ipAddressInput" value="192.168.1.64">
+        </div>
+        <div class="col-md-3  col-sm-6 col-xs-6">
+          <input type="text" class="form-control"  name="port" [(ngModel)]="port"  value="8100">
+        </div>
+      </div>
+      <div class="row" style="padding-top: 10px">
+        <div class="col-md-2  col-xs-6 col-sm-6 ">
+          <button class="btn btn-primary" type="button"
+                  (click)="initConnection()" >连接并初始化</button>
+        </div>
+        <div class="col-md-2  col-xs-6 col-sm-6">
+          <button class="btn btn-primary" type="button" (click)="runToZero()">运行到零点</button>
+        </div>
+      </div>
+      <div class="row" style="margin-top: 10px;">
+          <div class="col-md-3  col-xs-6 col-sm-6">
+          工作模式：
+            <bSwitch
+              [switch-off-text]="'手动'"
+              [switch-on-text]="'自动'"
+              [(ngModel)]="workMode"
+              [switch-size]="'small'"
+              [switch-base-class]="'bootstrap-switch'"
+              (onChangeState)="changeWorkMode($event)">
+            </bSwitch>
+        </div>
+        <div class="col-md-2 col-xs-6 col-sm-6">
+          伺服:
+          <bSwitch
+            [switch-off-text]="'关'"
+            [switch-on-text]="'开'"
+            [(ngModel)]="motor"
+            [switch-size]="'small'"
+            [switch-base-class]="'bootstrap-switch'"
+            (onChangeState)="changeMotor($event)">
+          </bSwitch>
+        </div>
+      </div>
+      <div class="row" style="margin-top: 10px">
+        <div class="col-md-4  col-xs-6 col-sm-4" >
+          <button class="btn btn-primary" type="button"  (click)="clearWarn()">清除报警</button>
+        </div>
+        <div class="col-md-4  col-xs-6 col-sm-4">
+          <button class="btn btn-primary" type="button"  (click)="refreshPoint()">同步点</button>
+        </div>
+        <div class="col-md-4  col-xs-6 col-sm-4">
+          <button class="btn btn-primary" type="button" (click)="refreshAngle()">同步关节角</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card card-outline-primary">
+    <div class="card-header">
+      运动
+    </div>
+    <div class="card-block">
+
+      <div class="row" >
+        <form action="" method="post">
+          <div class="row" >
+          <div class="form-group col-md-4">
+            <div class="input-group">
+              <span class="input-group-addon">运行速度(1-1000)</span>
+              <input class="form-control" name="speed" [(ngModel)]="speed" type="number">
+
+            </div>
+          </div>
+          <div class="form-group col-md-4">
+            <div class="input-group">
+              <span class="input-group-addon">运行步长</span>
+              <input class="form-control" name="step" [(ngModel)]="moveStep" type="number">
+            </div>
+          </div>
+            <div class="form-group col-md-4">
+              <div class="input-group ">
+                <div class="input-group ">
+                  <span class="input-group-addon">工具坐标系编号</span>
+                  <input class="form-control" name="coordLabel" [(ngModel)]="coordLabel" type="number">
+                </div>
+                <button class="btn btn-primary  col-md-4  col-sm-3" type="button"  (click)="moveObject($event)">
+                  运行到输入点
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+
+      <div class="card card-outline-primary">
+        <div class="card-header">
+          基坐标
+        </div>
+        <div class="card-block">
+          <div class="row" >
+
+            <div class="col-md-2 col-xs-6"  >
+              x：
+              <div class="input-group">
+                <span class="input-group-btn col-sm-3">
+                  <button class="btn btn-primary changeNumber" type="button" style="width: 100%" (click)="diffPosCoordValue(false,0,$event)">-</button>
+                </span>
+                        <input class="form-control col-sm-6"  style="text-align: center" [(ngModel)]="posCoord[0]" name="xyz0" type="text" value="5">
+                        <span class="input-group-btn col-sm-3">
+                    <button class="btn btn-primary changeNumber" style="width: 100%" type="button" (click)="diffPosCoordValue(true,0,$event)">+</button>
+                </span>
+              </div>
+            </div>
+
+            <div class="col-md-2 col-xs-6"  >
+              y：
+              <div class="input-group">
+                <span class="input-group-btn col-sm-3">
+                  <button class="btn btn-primary changeNumber" type="button" style="width: 100%"  (click)="diffPosCoordValue(false,1,$event)">-</button>
+                </span>
+                <input class="form-control col-sm-6" style="text-align: center"  [(ngModel)]="posCoord[1]" name="xyz1" type="text" value="5">
+                <span class="input-group-btn col-sm-3">
+                    <button class="btn btn-primary changeNumber" style="width: 100%" type="button" (click)="diffPosCoordValue(true,1,$event)">+</button>
+                </span>
+              </div>
+            </div>
+
+
+            <div class="col-md-2 col-xs-6"  >
+              z：
+              <div class="input-group">
+                <span class="input-group-btn col-sm-3">
+                  <button class="btn btn-primary changeNumber" type="button" style="width: 100%" (click)="diffPosCoordValue(false,2,$event)">-</button>
+                </span>
+                <input class="form-control col-sm-6"  style="text-align: center" [(ngModel)]="posCoord[2]" name="xyz2" type="text" value="5">
+                <span class="input-group-btn col-sm-3">
+                    <button class="btn btn-primary changeNumber" type="button" style="width: 100%" (click)="diffPosCoordValue(true,2,$event)">+</button>
+                </span>
+              </div>
+            </div>
+
+
+            <div class="col-md-2 col-xs-6"  >
+              RX：
+              <div class="input-group">
+                <span class="input-group-btn col-sm-3">
+                  <button class="btn btn-primary changeNumber" type="button" style="width:100%;" (click)="diffPosCoordValue(false,3,$event)">-</button>
+                </span>
+                <input class="form-control col-sm-6" style="text-align: center"  [(ngModel)]="posCoord[3]" name="xyz3" type="text" value="5">
+                <span class="input-group-btn col-sm-3">
+                    <button class="btn btn-primary changeNumber" type="button" style="width: 100%" (click)="diffPosCoordValue(true,3,$event)">+</button>
+                </span>
+              </div>
+            </div>
+
+
+            <div class="col-md-2 col-xs-6"  >
+              RY：
+              <div class="input-group">
+                <span class="input-group-btn col-sm-3">
+                  <button class="btn btn-primary changeNumber" type="button" style="width: 100%" (click)="diffPosCoordValue(false,4,$event)">-</button>
+                </span>
+                <input class="form-control col-sm-6"  style="text-align:center" [(ngModel)]="posCoord[4]" name="xyz4" type="text" value="4">
+                <span class="input-group-btn col-sm-3">
+                    <button class="btn btn-primary changeNumber" type="button" style="width: 100%" (click)="diffPosCoordValue(true,4,$event)">+</button>
+                </span>
+              </div>
+            </div>
+
+
+            <div class="col-md-2 col-xs-6"  >
+              RZ：
+              <div class="input-group">
+                <span class="input-group-btn col-sm-3">
+                  <button class="btn btn-primary changeNumber" type="button" style="width: 100%" (click)="diffPosCoordValue(false,5,$event)">-</button>
+                </span>
+                <input class="form-control col-sm-6"  style="text-align: center" [(ngModel)]="posCoord[5]" name="xyz5" type="text" value="5">
+                <span class="input-group-btn col-sm-3">
+                    <button class="btn btn-primary changeNumber" type="button" style="width: 100%" (click)="diffPosCoordValue(true,5,$event)">+</button>
+                </span>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          根据当前点信息创建点
+        </div>
+        <div class="card-body">
+          <form action="" method="post" class="form-inline">
+            <div class="input-group">
+              <input class="form-control" id="input2-group2" name="input2-group2" [(ngModel)]="pointName"  placeholder="请输入点名称" type="text">
+              <span class="input-group-btn">
+                    <button class="btn btn-primary" type="button" (click)="createPoint()">提交</button>
+              </span>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card card-outline-primary" >
+        <div class="card-header">
+          关节
+        </div>
+        <div class="card-block" >
+
+          <div class="row" >
+            <div class="col-md-2 col-xs-6 col-sm-6"  >
+              1轴：
+              <div class="input-group ">
+                <input  name="joint0"  class="form-control col-sm-6 "   style="text-align: center" [(ngModel)]="joint[0]" type="text" value="5">
+              </div>
+            </div>
+
+            <div class="col-md-2 col-xs-6 col-sm-6"  >
+              2轴：
+              <div class="input-group">
+                <input  name="joint1"  class="form-control col-sm-6"  style="text-align: center"  [(ngModel)]="joint[1]" type="text" value="5">
+              </div>
+            </div>
+
+            <div class="col-md-2 col-xs-6 col-sm-6"  >
+              3轴：
+              <div class="input-group">
+                <input class="form-control col-sm-6"  name="joint2"  style="text-align: center"  [(ngModel)]="joint[2]" type="text" value="2">
+              </div>
+            </div>
+
+            <div class="col-md-2 col-xs-6 col-sm-6"  >
+              4轴：
+              <div class="input-group">
+                <input class="form-control col-sm-6"  name="joint3"  style="text-align: center"  [(ngModel)]="joint[3]" type="text" value="2">
+              </div>
+            </div>
+
+            <div class="col-md-2 col-xs-6 col-sm-6"  >
+              5轴：
+              <div class="input-group">
+                <input class="form-control col-sm-6"  name="joint4" style="text-align: center"   [(ngModel)]="joint[4]" type="text" value="2">
+              </div>
+            </div>
+
+            <div class="col-md-2 col-xs-6 col-sm-6"  >
+              6轴：
+              <div class="input-group">
+                <input class="form-control col-sm-6"  name="joint5"   style="text-align: center" [(ngModel)]="joint[5]" type="text" value="2">
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+</div>

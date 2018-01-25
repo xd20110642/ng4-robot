@@ -1,0 +1,641 @@
+<div class="animated fadeIn">
+  <div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        创建程序
+      </div>
+      <div class="card-body">
+
+        <form action="" method="post" class="form-inline">
+          <!--添加了搜索按钮-->
+          <div class="input-group">
+            <input class="form-control" id="input2-group2" name="input2-group2" [(ngModel)]="programName"  placeholder="请输入程序名称" type="text">
+            <span class="input-group-btn">
+                    <button class="btn btn-primary" type="button" (click)="create()">提交</button>
+            </span>
+          </div>
+          <!---->
+        </form>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div class="row" *ngIf="programDataLoaded">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          程序列表
+        </div>
+        <br>
+        <!--添加了搜索按钮-->
+        <div class="row">
+          <div class="input-group ">
+            <input class="form-control col-md-6 col-sm-4" style="margin-left: 30px"  name="input2-group2" [(ngModel)]="keyword"    placeholder="请输入程序名称" type="text">
+            <span class="input-group-btn ">
+                    <button class="btn btn-primary " type="button" (click)="list()">搜索</button>
+        </span>
+          </div>
+        </div>
+
+        <!---->
+        <div class="card-body">
+          <div class="card-body">
+            <table class="table table-bordered table-striped table-sm">
+              <thead>
+              <tr>
+                <th>ID</th>
+                <th>程序名称</th>
+                <th>创建日期</th>
+                <th>操作</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr  *ngFor="let item of programListData.pageItems; index as i;">
+                <td>{{item.id}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.dateCreated | date: 'yyyy-MM-dd' }}</td>
+                <td>
+                    <span class="input-group-btn">
+                      <button class="btn btn-primary " type="button" (click)="listProgramItem(item.id,item.name)">编辑</button>
+                       <button class="btn btn-primary " type="button" (click)="download(item.id)">下载</button>
+                      <program-controller [proId]="item.id" [offlinePro]="false" [proName]="item.name"></program-controller>
+                    </span>
+
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <!--这个是添加分页模板-->
+            <div class="col-md-6">
+              <pagination [totalItems]="programPageInfo.bigTotalItems" [(ngModel)]="programPageInfo.bigCurrentPage" [maxSize]="programPageInfo.maxSize" class="pagination-sm"
+                          [firstText]="'首页'"
+                          [previousText]="'前一页'"
+                          [nextText]="'后一页'"
+                          [lastText]="'末页'"
+                          [boundaryLinks]="true"
+                          [itemsPerPage] = "programPageInfo.max"
+                          (pageChanged)="programPageChanged($event)"></pagination>
+            </div>
+            <!---->
+          </div><!--card body end-->
+        </div>
+      </div>
+    </div>
+  </div><!-- end row-->
+
+  <div class="row" >
+
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          编辑  <span >{{editName}}</span> &nbsp;&nbsp;(注意：结束点要和起始点相同)
+        </div>
+          <div class="card-body">
+            <table class="table table-bordered table-striped table-sm" *ngIf="programItemDataLoaded">
+              <thead>
+              <tr>
+                <th>任务类型</th>
+                <th>点名称</th>
+                <th>速度/值</th>
+                <th>平滑比</th>
+                <th>创建日期</th>
+                <th>操作</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr  *ngFor="let item of programItemData; index as i;">
+                <td>{{serverEnum.TaskType[item.taskType]}}
+                  <span *ngIf="item.taskType == 'CURVE'">({{serverEnum.CurveType[item.curveType]}})</span>
+                </td>
+                <td>{{item.pointName }}</td>
+                <td>{{item.velocity }}
+                  <samp *ngIf="item.taskType == 'OUTPUT'" >{{item.portArrayJson }},{{item.levelArrayJson }}</samp>
+                  <samp *ngIf="item.taskType == 'SLEEP'" >{{item.sleep }}</samp>
+                  </td>
+                <td>{{item.Flatness }}</td>
+                <td>{{item.dateCreated | date: 'yyyy-MM-dd' }}</td>
+                <td>
+                    <span class="input-group-btn">
+                      <button class="btn btn-primary " (click)="delPoint(item.id)" type="button" >删除</button>
+                    </span>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <div class="row" *ngIf="programItemDataLoaded"  >
+                  <span class="input-group-btn">
+                       <button class="btn btn-primary " type="button"   (click)="addStartPoint();primaryModal.show()" >添加点</button>
+                       <button class="btn btn-primary " type="button" (click)="addStartPoint();arcModal.show()">添加圆弧</button>
+                       <button class="btn btn-primary " type="button" (click)="sleepModal.show()">添加延时</button>
+                       <button class="btn btn-primary " type="button" (click)="outputAddValue=[];outputModal.show()">添加输出</button>
+                       <button class="btn btn-primary " type="button" (click)="analogModal.show()">添加模拟量输出</button>
+                     <button class="btn btn-primary " type="button" (click)="outputAddValue=[];serialArray=[];waitModal.show()">添加等待</button>
+                  </span>
+            </div>
+            <div class="row" *ngIf="!programItemDataLoaded"  >
+                  <span class="input-group-btn">
+                       <button class="btn btn-primary "  data-toggle="modal"  type="button" *ngIf="editId>0"  (click)="addStartPoint();primaryModal.show()">添加起始点</button>
+                  </span>
+            </div>
+          </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div bsModal #primaryModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-primary  modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">添加点，起始点名称：{{lastPointInfo.name}}</h4>
+        <button type="button" class="close" (click)="primaryModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row" >
+          <form action="" method="post">
+            <div class="row" >
+              <div class="form-group col-md-6">
+                <div class="input-group">
+                  <span class="input-group-addon">运行速度(1-1000)</span>
+                  <input class="form-control" name="speed" [(ngModel)]="velocity" type="number">
+
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <div class="input-group">
+                  <span class="input-group-addon">平滑比</span>
+                  <input class="form-control" name="step" [(ngModel)]="flatness" type="number">
+
+                </div>
+              </div>
+
+
+            </div>
+          </form>
+          <!--添加搜索按钮-->
+          <!--添加了搜索按钮-->
+          <div class="row">
+            <div class="input-group ">
+              <input class="form-control col-md-6 col-sm-4" style="margin-left: 30px" id="input-group" name="input2-group2" [(ngModel)]="pointSearch"    placeholder="请输入程序名称" type="text">
+              <span class="input-group-btn ">
+                    <button class="btn btn-primary " type="button" (click)="getPointData()">搜索</button>
+        </span>
+            </div>
+          </div>
+
+        </div>
+        <br>
+        <div  style="height:500px;overflow:scroll;">
+        <table class="table table-bordered table-striped table-sm" style="width: 100%;height: 500px;" *ngIf="pointDataLoaded">
+          <thead>
+          <tr>
+            <th>点名称</th>
+            <th>1-6轴</th>
+            <th>x,y,z,RX,RY,RZ</th>
+            <th>操作</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr  *ngFor="let item of pointData.pageItems; index as i;">
+            <td>{{item.name}}</td>
+            <td>{{item.angleJson}}</td>
+            <td>{{item.posCoordJson}} </td>
+            <td>
+                <span class="input-group-btn">
+                  <button class="btn btn-primary " type="button"  (click)="addPoint(item.id,item.name,'JOINT')">关节</button>
+                  <button class="btn btn-primary " type="button"  (click)="addPoint(item.id,item.name,'LINE')">直线</button>
+                </span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+      <!--这个是添加分页模板-->
+      <div class="col-md-6">
+        <pagination [totalItems]="pointPageInfo.bigTotalItems" [(ngModel)]="pointPageInfo.bigCurrentPage" [maxSize]="pointPageInfo.maxSize" class="pagination-sm"
+                    [firstText]="'首页'"
+                    [previousText]="'前一页'"
+                    [nextText]="'后一页'"
+                    [lastText]="'末页'"
+                    [boundaryLinks]="true"
+                    [itemsPerPage] = "pointPageInfo.max"
+                    (pageChanged)="pointPageInfoChanged($event)"></pagination>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+
+</div><!-- /.modal -->
+
+
+
+<div bsModal #arcModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="arcModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-primary  modal-lg" style="width: 80%;margin: auto" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">添加圆弧，起始点名称：{{lastPointInfo.name}}</h4>
+        <button type="button" class="close" (click)="arcModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row" >
+          <form action="" method="post">
+            <div class="row" >
+              <div class="col-md-1"></div>
+              <div class="form-group col-md-4">
+                <div class="input-group">
+                  <span class="input-group-addon">中间点：</span>
+                  <input class="form-control" disabled name="middlePoint" [(ngModel)]="secondPointInfo.name" type="text">
+                </div>
+              </div>
+              <div class="form-group col-md-4">
+                <div class="input-group">
+                  <span class="input-group-addon">结束点</span>
+                  <input class="form-control" disabled name="endPoint" [(ngModel)]="threePointInfo.name" type="text">
+
+                </div>
+              </div>
+
+              <div class="form-group col-md-2">
+                <div class="input-group">
+                  <span class="input-group-btn">
+                  <button class="btn btn-success " type="button"  (click)="addArc('CIR')">提交圆弧</button>
+                    <button class="btn btn-success " type="button"  (click)="addArc('ARC')">提交圆</button>
+                  </span>
+
+                </div>
+              </div>
+
+              <div class="col-md-1"></div>
+            </div>
+
+            <div class="row" >
+              <div class="col-md-1"></div>
+              <div class="form-group col-md-5">
+                <div class="input-group">
+                  <span class="input-group-addon">运行速度(1-1000)</span>
+                  <input class="form-control" name="speed" [(ngModel)]="velocity" type="number">
+
+                </div>
+              </div>
+              <div class="form-group col-md-5">
+                <div class="input-group">
+                  <span class="input-group-addon">平滑比</span>
+                  <input class="form-control" name="step" [(ngModel)]="flatness" type="number">
+                </div>
+              </div>
+              <div class="col-md-1"></div>
+            </div>
+
+
+          </form>
+        </div>
+        <div  style="height:500px;overflow:scroll;">
+          <table class="table table-bordered table-striped table-sm" style="width: 100%;height: 500px;" *ngIf="pointDataLoaded">
+            <thead>
+            <tr>
+              <th>点名称</th>
+              <th>1-6轴</th>
+              <th>x,y,z,RX,RY,RZ</th>
+              <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr  *ngFor="let item of pointData.pageItems; index as i;">
+              <td>{{item.name}}</td>
+              <td>{{item.angleJson}}</td>
+              <td>{{item.posCoordJson}} </td>
+              <td>
+                <span class="input-group-btn">
+                  <button class="btn btn-primary " type="button"  (click)="setSecondPoint(item)">中间点</button>
+                  <button class="btn btn-primary " type="button"  (click)="setThreePoint(item)">结束点</button>
+                </span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<div bsModal #sleepModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sleepModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-primary " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">添加延时</h4>
+        <button type="button" class="close" (click)="sleepModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row" >
+          <form action="" method="post">
+            <div class="row" >
+              <div class="col-md-1"></div>
+              <div class="form-group col-md-8">
+                <div class="input-group">
+                  <span class="input-group-addon">延时时间（单位毫秒）</span>
+                  <input class="form-control"  name="sleepInput" [(ngModel)]="sleepTime" type="number">
+                </div>
+              </div>
+              <div class="form-group col-md-2">
+                <div class="input-group">
+                  <span class="input-group-btn">
+                  <button class="btn btn-success " type="button"  (click)="submitSleep()">提交</button>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-1"></div>
+            </div>
+            <div class="col-md-1"></div>
+          </form>
+        </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<div bsModal #outputModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="outputModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-primary modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">添加输出</h4>
+        <button type="button" class="close" (click)="outputModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row" >
+          <form action="" method="post" class="col-md-12">
+            <div class="row" >
+              <div class="col-md-1"></div>
+              <div class="form-group col-md-5">
+                <div class="input-group">
+                  <span class="input-group-addon">端口</span>
+                  <select class="form-control" name="outputSelect" [(ngModel)]="outputPortNo">
+                    <option *ngFor="let item of outputArray; index as i;" value="{{i}}">{{i}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group col-md-3">
+                <div class="input-group">
+                  <span class="input-group-addon">值</span>
+                  <select class="form-control" name="valueSelect" [(ngModel)]="outputValue">
+                    <option  value="1">1</option>
+                    <option  value="0">0</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group col-md-2">
+                <div class="input-group">
+                  <span class="input-group-btn">
+                  <button class="btn btn-success " type="button"  (click)="addOutputItem()">添加</button>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-1"></div>
+            </div>
+          </form>
+
+        </div>
+        <div class="row" *ngFor="let item of outputAddValue; index as i;">
+          <div class="col-md-2"></div>
+          <h5 ><span class="label label-success" >端口:{{item.portNo}},值:{{item.value}}</span></h5>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" (click)="outputModal.hide()">关闭</button>
+        <button class="btn btn-primary" type="button" (click)="submitOutput()">提交</button>
+      </div>
+    </div><!-- /.modal-content -->
+
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<div bsModal #analogModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="analogModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-primary modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">添加输出模拟量</h4>
+        <button type="button" class="close" (click)="analogModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row" >
+            <form action="" method="post" class="col-md-12">
+              <div class="row" >
+                <div class="col-md-1"></div>
+                <div class="form-group col-md-4">
+                  <div class="input-group">
+                    <span class="input-group-addon">通道</span>
+                    <select class="form-control" name="valueSelect" [(ngModel)]="analogChanel">
+                      <option  value="0">0</option>
+                      <option  value="1">1</option>
+                      <option  value="2">2</option>
+                      <option  value="3">3</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group col-md-3">
+                  <div class="input-group">
+                    <span class="input-group-addon">数据来源</span>
+                    <select class="form-control" name="valueSelect" [(ngModel)]="analogType">
+                      <option  value="0">当前任务</option>
+                      <option  value="1">全局变量</option>
+                    </select>
+                  </div>
+                </div>
+
+              <div class="form-group col-md-3">
+                <div class="input-group">
+                  <span class="input-group-addon">值</span>
+                  <input class="form-control"  name="sleepInput" [(ngModel)]="analogValue" type="number">
+                </div>
+              </div>
+                <div class="col-md-1"></div>
+              </div>
+            </form>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" (click)="analogModal.hide()">关闭</button>
+        <button class="btn btn-primary" type="button" (click)="submitAnalog()">提交</button>
+      </div>
+
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+<div bsModal #waitModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="waitModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-primary modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">添加等待</h4>
+        <button type="button" class="close" (click)="waitModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row" >
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                端口等待
+              </div>
+              <div class="card-body">
+                <form action="" method="post" class="col-md-12">
+                  <div class="row" >
+                    <div class="col-md-1"></div>
+                    <div class="form-group col-md-4">
+                      <div class="input-group">
+                        <span class="input-group-addon">端口</span>
+                        <select class="form-control" name="outputSelect" [(ngModel)]="outputPortNo">
+                          <option *ngFor="let item of outputArray; index as i;" value="{{i}}">{{i}}</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                      <div class="input-group">
+                        <span class="input-group-addon">值</span>
+                        <select class="form-control" name="valueSelect" [(ngModel)]="outputValue">
+                          <option  value="1">1</option>
+                          <option  value="0">0</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-2">
+                      <div class="input-group">
+                  <span class="input-group-btn">
+                  <button class="btn btn-success " type="button"  (click)="addOutputItem()">添加</button>
+                  </span>
+                      </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                  </div>
+
+                  <div class="row" *ngFor="let item of outputAddValue; index as i;">
+                    <div class="col-md-2"></div>
+                    <h5 class="col-md-4"><span class="label label-success" >端口:{{item.portNo}},值:{{item.value}}</span></h5>
+                  </div>
+                  <hr>
+                  <div class="row" >
+                    <div class="col-md-1"></div>
+                    <div class="form-group col-md-5">
+                      <div class="input-group">
+                        <span class="input-group-addon">条件类型</span>
+                        <select class="form-control" name="valueSelect" [(ngModel)]="outputType">
+                          <option  value="0">与</option>
+                          <option  value="1">或</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-5">
+                      <div class="input-group" style="float: right">
+                        <span class="input-group-btn">
+                        <button class="btn btn-primary " type="button"  (click)="submitOutputWait()">提交</button>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                继电器等待
+              </div>
+              <div class="card-body">
+                <form action="" method="post" class="col-md-12">
+                  <div class="row" >
+                    <div class="col-md-1"></div>
+                    <div class="form-group col-md-4">
+                      <div class="input-group">
+                        <span class="input-group-addon">序号</span>
+                        <select class="form-control" name="serialValueSelect" [(ngModel)]="serialValue">
+                          <option  value="0">0</option>
+                          <option  value="1">1</option>
+                          <option  value="2">2</option>
+                          <option  value="3">3</option>
+                          <option  value="4">4</option>
+                          <option  value="5">5</option>
+                          <option  value="6">6</option>
+                          <option  value="7">7</option>
+                          <option  value="8">8</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-2">
+                      <div class="input-group">
+                        <span class="input-group-btn">
+                        <button class="btn btn-success " type="button"  (click)=" addSerial()">添加</button>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                  </div>
+                  <div class="row" *ngFor="let item of serialArray; index as i;">
+                    <div class="col-md-2"></div>
+                    <h5 class="col-md-4"><span class="label label-success" >序号:{{item}}</span></h5>
+                  </div>
+                  <hr>
+                  <div class="row" >
+                    <div class="col-md-1"></div>
+                    <div class="form-group col-md-5">
+                      <div class="input-group">
+                        <span class="input-group-addon">条件类型</span>
+                        <select class="form-control" name="valueSelect" [(ngModel)]="serialType">
+                          <option  value="0">与</option>
+                          <option  value="1">或</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-5">
+                      <div class="input-group" style="float: right">
+                        <span class="input-group-btn">
+                        <button class="btn btn-primary " type="button"  (click)="submitSerialWait()">提交</button>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                  </div>
+
+
+                </form>
+              </div>
+
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

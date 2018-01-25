@@ -1,0 +1,51 @@
+<span class="input-group-btn">
+
+  <button class="btn btn-success" type="button" data-toggle="modal" (click)="proLoadModel.show()">执行</button>
+
+</span>
+
+<div bsModal #proLoadModel="bs-modal" class="modal fade" tabindex="-1"
+     role="dialog" aria-labelledby="proLoadModelLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">执行:{{proName}}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="proLoadModel.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+      <form action="" method="post">
+        <div class="form-group">
+          <div class="input-group">
+            <span class="input-group-addon">运动速率</span>
+            <input class="form-control" id="username3" name="username3" [(ngModel)]="velocity" type="number">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group">
+            <span class="input-group-addon">运动模式</span>
+            <select class="form-control" id="select" name="select" [(ngModel)]="movementFlag">
+              <option *ngFor="let item of movementFlagSelectData" [value]='item.value'>{{item.name}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group">
+            <span class="input-group-addon">重复次数</span>
+            <input class="form-control"  name="password3" [(ngModel)]="repeatMovementNumber" type="number" >
+          </div>
+        </div>
+        <div class="form-group form-actions" style="float:right;">
+          <button class="btn btn-success" type="button"  (click)="load(proId)">加载</button>
+          <button class="btn  btn-primary" type="button" (click)="start()">启动</button>
+          <button class="btn btn-success" type="button"  (click)="pause()">暂停</button>
+          <button class="btn btn-success" type="button"  (click)="goon()">继续</button>
+          <button class="btn btn-success" type="button" (click)="stop()">停止</button>
+
+        </div>
+      </form>
+    </div>
+    </div>
+  </div>
+</div>

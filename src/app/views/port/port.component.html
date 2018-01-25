@@ -1,0 +1,274 @@
+<div class="animated fadeIn">
+  <div class="card">
+    <div class="card-header">
+     端口管理
+    </div>
+    <div class="card-block">
+      <div class="row">
+      <div class="col-md-12 col-sm-6 col-xs-12">
+        端口功能:
+        <bSwitch
+          [switch-off-text]="'关'"
+          [switch-on-text]="'开'"
+          [(ngModel)]="protFunction"
+          [switch-base-class]="'bootstrap-switch'"
+          (onChangeState)="changeTrans()">
+        </bSwitch>
+      </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="card">
+    <div class="card-header">
+      设置输出
+      <button class="btn btn-primary" type="button"  (click)="getOutput()">
+        获取状态值
+      </button>
+    </div>
+    <div class="card-block">
+      <div class="row">
+        <div class="col-md-2 col-xs-12 col-sm-3" >
+          OUT_0
+          <label class="switch switch-text switch-lg switch-pill switch-primary-outline-alt" >
+            <input  class="switch-input" type="checkbox" name="output0"  (click)="setOutput(0)"   [(ngModel)]="outputArray[0]">
+            <span class="switch-label" data-off="底" data-on="高"></span>
+            <span class="switch-handle"></span>
+          </label>
+        </div>
+
+        <div class="row">
+          <div class="col-md-2 col-xs-12 col-sm-3" >
+            OUT_1
+            <label class="switch switch-text switch-lg switch-pill switch-primary-outline-alt" >
+              <input  class="switch-input" type="checkbox" name="output1"  (click)="setOutput(1)"   [(ngModel)]="outputArray[1]">
+              <span class="switch-label" data-off="底" data-on="高"></span>
+              <span class="switch-handle"></span>
+            </label>
+          </div>
+
+          <div class="col-md-2 col-xs-12 col-sm-3" >
+            OUT_2
+            <label class="switch switch-text switch-lg switch-pill switch-primary-outline-alt" >
+              <input  class="switch-input" type="checkbox" name="output2"  (click)="setOutput(2)"   [(ngModel)]="outputArray[2]">
+              <span class="switch-label" data-off="底" data-on="高"></span>
+              <span class="switch-handle"></span>
+            </label>
+          </div>
+
+          <div class="col-md-2 col-xs-12 col-sm-3" >
+            OUT_3
+            <label class="switch switch-text switch-lg switch-pill switch-primary-outline-alt" >
+              <input  class="switch-input" type="checkbox" name="output3"  (click)="setOutput(3)"   [(ngModel)]="outputArray[3]">
+              <span class="switch-label" data-off="底" data-on="高"></span>
+              <span class="switch-handle"></span>
+            </label>
+          </div>
+
+          <div class="col-md-2 col-xs-12 col-sm-3" >
+            OUT_4
+            <label class="switch switch-text switch-lg switch-pill switch-primary-outline-alt" >
+              <input  class="switch-input" type="checkbox" name="output4"  (click)="setOutput(4)"   [(ngModel)]="outputArray[4]">
+              <span class="switch-label" data-off="底" data-on="高"></span>
+              <span class="switch-handle"></span>
+            </label>
+          </div>
+
+
+          <div class="col-md-2 col-xs-12 col-sm-3" >
+            OUT_5
+            <label class="switch switch-text switch-lg switch-pill switch-primary-outline-alt" >
+              <input  class="switch-input" type="checkbox" name="output5"  (click)="setOutput(5)"   [(ngModel)]="outputArray[5]">
+              <span class="switch-label" data-off="底" data-on="高"></span>
+              <span class="switch-handle"></span>
+            </label>
+          </div>
+
+          <div class="col-md-2 col-xs-12 col-sm-3" >
+            OUT_6
+            <label class="switch switch-text switch-lg switch-pill switch-primary-outline-alt" >
+              <input  class="switch-input" type="checkbox" name="output6"  (click)="setOutput(6)"   [(ngModel)]="outputArray[6]">
+              <span class="switch-label" data-off="底" data-on="高"></span>
+              <span class="switch-handle"></span>
+            </label>
+          </div>
+
+
+          <div class="col-md-2 col-xs-12 col-sm-3" >
+            OUT_7
+            <label class="switch switch-text switch-lg switch-pill switch-primary-outline-alt" >
+              <input  class="switch-input" type="checkbox" name="output7"  (click)="setOutput(7)"   [(ngModel)]="outputArray[7]">
+              <span class="switch-label" data-off="底" data-on="高"></span>
+              <span class="switch-handle"></span>
+            </label>
+          </div>
+
+          <div class="col-md-2 col-xs-12 col-sm-3" >
+            OUT_8
+            <label class="switch switch-text switch-lg switch-pill switch-primary-outline-alt" >
+              <input  class="switch-input" type="checkbox" name="output8"  (click)="setOutput(8)"   [(ngModel)]="outputArray[8]">
+              <span class="switch-label" data-off="底" data-on="高"></span>
+              <span class="switch-handle"></span>
+            </label>
+          </div>
+
+          <div class="col-md-2 col-xs-12 col-sm-3" >
+            OUT_9
+            <label class="switch switch-text switch-lg switch-pill switch-primary-outline-alt" >
+              <input  class="switch-input" type="checkbox" name="output9"  (click)="setOutput(9)"   [(ngModel)]="outputArray[9]">
+              <span class="switch-label" data-off="底" data-on="高"></span>
+              <span class="switch-handle"></span>
+            </label>
+          </div>
+
+          <div class="col-md-2 col-xs-12 col-sm-3" >
+            OUT_10
+            <label class="switch switch-text switch-lg switch-pill switch-primary-outline-alt" >
+              <input  class="switch-input" type="checkbox" name="output10"  (click)="setOutput(10)"   [(ngModel)]="outputArray[10]">
+              <span class="switch-label" data-off="底" data-on="高"></span>
+              <span class="switch-handle"></span>
+            </label>
+          </div>
+
+          <div class="col-md-2 col-xs-12 col-sm-3" >
+            OUT_11
+            <label class="switch switch-text switch-lg switch-pill switch-primary-outline-alt" >
+              <input  class="switch-input" type="checkbox" name="output11"  (click)="setOutput(11)"   [(ngModel)]="outputArray[11]">
+              <span class="switch-label" data-off="底" data-on="高"></span>
+              <span class="switch-handle"></span>
+            </label>
+          </div>
+
+          <div class="col-md-2 col-xs-12 col-sm-3" >
+            OUT_12
+            <label class="switch switch-text switch-lg switch-pill switch-primary-outline-alt" >
+              <input  class="switch-input" type="checkbox" name="output12"  (click)="setOutput(12)"   [(ngModel)]="outputArray[12]">
+              <span class="switch-label" data-off="底" data-on="高"></span>
+              <span class="switch-handle"></span>
+            </label>
+          </div>
+
+          <div class="col-md-2 col-xs-12 col-sm-3" >
+            OUT_13
+            <label class="switch switch-text switch-lg switch-pill switch-primary-outline-alt" >
+              <input  class="switch-input" type="checkbox" name="output13"  (click)="setOutput(13)"   [(ngModel)]="outputArray[13]">
+              <span class="switch-label" data-off="底" data-on="高"></span>
+              <span class="switch-handle"></span>
+            </label>
+          </div>
+
+          <div class="col-md-2 col-xs-12 col-sm-3" >
+            OUT_14
+            <label class="switch switch-text switch-lg switch-pill switch-primary-outline-alt" >
+              <input  class="switch-input" type="checkbox" name="output14"  (click)="setOutput(14)"   [(ngModel)]="outputArray[14]">
+              <span class="switch-label" data-off="底" data-on="高"></span>
+              <span class="switch-handle"></span>
+            </label>
+          </div>
+
+          <div class="col-md-2 col-xs-12 col-sm-3" >
+            OUT_15
+            <label class="switch switch-text switch-lg switch-pill switch-primary-outline-alt" >
+              <input  class="switch-input" type="checkbox" name="output15"  (click)="setOutput(15)"   [(ngModel)]="outputArray[15]">
+              <span class="switch-label" data-off="底" data-on="高"></span>
+              <span class="switch-handle"></span>
+            </label>
+          </div>
+
+          <div class="col-md-2 col-xs-12 col-sm-3" >
+            OUT_16
+            <label class="switch switch-text switch-lg switch-pill switch-primary-outline-alt" >
+              <input  class="switch-input" type="checkbox" name="output16"  (click)="setOutput(16)"   [(ngModel)]="outputArray[16]">
+              <span class="switch-label" data-off="底" data-on="高"></span>
+              <span class="switch-handle"></span>
+            </label>
+          </div>
+
+          <div class="col-md-2 col-xs-12 col-sm-3" >
+            OUT_17
+            <label class="switch switch-text switch-lg switch-pill switch-primary-outline-alt" >
+              <input  class="switch-input" type="checkbox" name="output17"  (click)="setOutput(17)"   [(ngModel)]="outputArray[17]">
+              <span class="switch-label" data-off="底" data-on="高"></span>
+              <span class="switch-handle"></span>
+            </label>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div><!--output card end-->
+
+  <div class="card">
+    <div class="card-header">
+      设置模拟量
+      <button class="btn btn-primary" type="button"  (click)="getAnalog()">
+        获取模拟量
+      </button>
+    </div>
+    <div class="card-block">
+      <div class="row">
+
+      <div class="form-group col-md-3">
+        <div class="input-group">
+          <div class="input-group">
+            <span class="input-group-addon">通道0</span>
+            <select class="form-control" name="analog0" [(ngModel)]="analogArray[0]">
+                <option *ngFor="let i of selectValues" value="{{i}}">{{i}}</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" type="button"  (click)="setAnalog(0)">
+            设置
+          </button>
+        </div>
+      </div>
+
+        <div class="form-group col-md-3">
+          <div class="input-group">
+            <div class="input-group">
+              <span class="input-group-addon">通道1</span>
+              <select class="form-control" name="analog1" [(ngModel)]="analogArray[1]">
+                <option *ngFor="let i of selectValues" value="{{i}}">{{i}}</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" type="button"  (click)="setAnalog(1)">
+              设置
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group col-md-3">
+          <div class="input-group">
+            <div class="input-group">
+              <span class="input-group-addon">通道2</span>
+              <select class="form-control" name="analog2" [(ngModel)]="analogArray[2]">
+                <option *ngFor="let i of selectValues" value="{{i}}">{{i}}</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" type="button"  (click)="setAnalog(2)">
+              设置
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group col-md-3">
+          <div class="input-group">
+            <div class="input-group">
+              <span class="input-group-addon">通道3</span>
+              <select class="form-control" name="analog3" [(ngModel)]="analogArray[3]">
+                <option *ngFor="let i of selectValues" value="{{i}}">{{i}}</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" type="button"  (click)="setAnalog(3)">
+              设置
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>

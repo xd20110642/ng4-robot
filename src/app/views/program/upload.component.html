@@ -1,0 +1,92 @@
+<div class="animated fadeIn">
+
+  <div class="row" *ngIf="listDataLoaded">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          离线程序列表
+        </div>
+        <div class="card-body">
+          <div class="card-body">
+                <!-- 添加搜索事件 -->
+                 <!--添加搜索按钮-->
+      <div class="input-group" >
+          <input class="form-control  col-md-6 col-sm-4" id="input-group" name="input2-group2" [(ngModel)]="keyword"    placeholder="请输入点名称" type="text">
+          <span class="input-group-btn ">
+                      <button class="btn btn-primary " type="button" (click)="list()">搜索</button>
+          </span>
+        </div>
+        <br>
+        <!--搜索按钮事件完成-->
+            <table class="table table-bordered table-striped table-sm">
+              <thead>
+              <tr>
+                <th>程序名称</th>
+                <th>创建日期</th>
+                <th>操作</th>
+              </tr>
+              </thead>
+              <tbody >
+              <tr  *ngFor="let item of listData.pageItems; index as i;">
+                <td>{{item.name}}</td>
+                <td>{{item.dateCreated | date: 'yyyy-MM-dd' }}</td>
+                <td>
+                    <span class="input-group-btn">
+                       <button class="btn btn-primary" type="button" (click)="show(item.name,item.programContent)">查看</button>
+                       <program-controller [proId]="item.id" [offlinePro]="true" [proName]="item.name"></program-controller>
+
+                      <button class="btn btn-default" type="button" (click)="del(item.id,item.name)">删除</button>
+                    </span>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <!--添加分页-->
+            <div class="col-md-6">
+              <pagination [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize" class="pagination-sm"
+                          [lastText]=" '末页' "
+                          [nextText]=" '下一页'"
+                          [firstText]="'首页'"
+                          [previousText]="'上一页'"
+                          [itemsPerPage] = "max"
+                          (pageChanged)="pageChanged($event)"
+                          [boundaryLinks]="true"></pagination>
+            </div>
+            <!--分页结束-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- end row-->
+
+
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+         上传程序，支持格式为json
+        </div>
+        <div class="card-body">
+          <form action="" method="post" class="form-horizontal">
+            <div class="form-group row">
+              <label class="col-md-3 form-control-label">请输入名称</label>
+              <div class="col-md-9">
+                <input class="form-control" id="text-input" name="text-input" [(ngModel)]="name" placeholder="Text" type="text">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 form-control-label" for="textarea-input">内容</label>
+              <div class="col-md-9">
+                <textarea class="form-control" id="textarea-input" name="textarea-input"  [(ngModel)]="content"  placeholder="Content.." rows="9"></textarea>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-sm btn-primary" type="button" (click)="create()"><i class="fa fa-dot-circle-o"></i> 提交</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
